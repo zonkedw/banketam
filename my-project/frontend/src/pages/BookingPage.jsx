@@ -3,6 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { createBooking, fetchBookingMeta } from "../api/bookingsApi";
 import { fetchVenues } from "../api/venuesApi";
 
+function parseRuDateToIso(value) {
+  const match = String(value).trim().match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  if (!match) return "";
+  const [, day, month, year] = match;
+  const iso = `${year}-${month}-${day}T18:00:00`;
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString();
+}
+
 export default function BookingPage() {
   const navigate = useNavigate();
   const [venues, setVenues] = useState([]);
@@ -29,9 +38,14 @@ export default function BookingPage() {
     e.preventDefault();
     setError("");
     setSuccess("");
+    const parsedDate = parseRuDateToIso(banquetDate);
+    if (!parsedDate) {
+      setError("Введите дату в формате ДД.ММ.ГГГГ");
+      return;
+    }
     setLoading(true);
     try {
-      await createBooking({ venueId, banquetDate, paymentMethod });
+      await createBooking({ venueId, banquetDate: parsedDate, paymentMethod });
       setSuccess("Заявка отправлена на согласование администратору");
       setTimeout(() => navigate("/cabinet"), 1500);
     } catch (err) {
@@ -70,12 +84,15 @@ export default function BookingPage() {
           </div>
 
           <div className="form-group">
-            <label className="label-field">Дата и время начала банкета</label>
+            <label className="label-field">Дата банкета (ДД.ММ.ГГГГ)</label>
             <input
-              type="datetime-local"
+              type="text"
               className="input-field"
               value={banquetDate}
               onChange={(e) => setBanquetDate(e.target.value)}
+              placeholder="31.12.2026"
+              inputMode="numeric"
+              pattern="\d{2}\.\d{2}\.\d{4}"
               required
             />
           </div>

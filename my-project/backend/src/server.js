@@ -12,6 +12,7 @@ const authRoutes = require("./routes/authRoutes");
 const venueRoutes = require("./routes/venueRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const settingsRoutes = require("./routes/settingsRoutes");
 const ensureSeedData = require("./ensureSeedData");
 
 const env = getEnv();
@@ -51,6 +52,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/venues", venueRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/settings", settingsRoutes);
 
 connectDatabase()
   .then(() => initSchema())

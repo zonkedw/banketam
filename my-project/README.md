@@ -20,3 +20,6 @@ npm run dev
 Параметры подключения в `backend/.env`.
 
 Админ: Admin26 / Demo20
+
+Модуль 3: при старте backend применяется `database/migrate_module3.sql` (контакты, новые способы оплаты).  
+Способы оплаты: QR, карта МИР, постоплата в офисе. Контакты: API `GET /api/settings`.

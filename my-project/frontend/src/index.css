@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold: #daa520;
+  --color-peach: #ffdab9;
+  --color-cream: #fffdd0;
+  --color-crimson: #dc143c;
+  --color-forest: #006400;
+  --font-oswald: "Oswald", sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-oswald);
+  font-size: 16px;
+  color: #000;
+  background: var(--color-cream);
+}
+
+h1 {
+  font-size: 36px;
+  color: var(--color-crimson);
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+h2 {
+  font-size: 24px;
+  color: var(--color-gold);
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+h3 {
+  font-size: 18px;
+  color: var(--color-gold);
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.text-muted {
+  font-size: 12px;
+  color: var(--color-forest);
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 0.6rem 1.25rem;
+  background: var(--color-crimson);
+  color: #fff;
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  background: #b01030;
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 0.6rem 1.25rem;
+  background: var(--color-gold);
+  color: #000;
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background: #c4941c;
+}
+
+.card {
+  background: #fff;
+  border: 2px solid var(--color-peach);
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.15);
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 2px solid var(--color-peach);
+  font-family: inherit;
+  font-size: 16px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  outline: 2px solid var(--color-gold);
+  border-color: var(--color-gold);
+}
+
+.label-field {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 14px;
+  color: var(--color-forest);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.alert-error {
+  background: #ffe4e8;
+  border: 1px solid var(--color-crimson);
+  color: var(--color-crimson);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.alert-success {
+  background: #e8f5e9;
+  border: 1px solid var(--color-forest);
+  color: var(--color-forest);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
+.status-new {
+  color: var(--color-crimson);
+  font-weight: 600;
+}
+
+.status-assigned {
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.status-done {
+  color: var(--color-forest);
+  font-weight: 600;
+}

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { fetchMyBookings } from "../api/bookingsApi";
 import { createReview, fetchMyReviews } from "../api/reviewsApi";
+import ImageSlider from "../components/ImageSlider";
+import { formatDateTime } from "../utils/formatDate";
 
 function statusClass(status) {
   if (status === "Новая") return "status-new";
@@ -8,30 +10,13 @@ function statusClass(status) {
   return "status-done";
 }
 
-function formatDate(value) {
-  return new Date(value).toLocaleString("ru-RU", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
 export default function CabinetPage({ user }) {
-  const slides = [
-    "/module2/slide-1.jpeg",
-    "/module2/slide-2.jpeg",
-    "/module2/slide-3.jpeg",
-    "/module2/slide-4.jpeg",
-  ];
   const [bookings, setBookings] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [reviewForm, setReviewForm] = useState({ bookingId: "", text: "", rating: 5 });
   const [loading, setLoading] = useState(true);
-  const [slideIndex, setSlideIndex] = useState(0);
 
   const load = async () => {
     setLoading(true);
@@ -49,13 +34,6 @@ export default function CabinetPage({ user }) {
   useEffect(() => {
     load();
   }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSlideIndex((prev) => (prev + 1) % slides.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, [slides.length]);
 
   const reviewedIds = new Set(reviews.map((r) => String(r.booking?._id || r.booking)));
   const canReview = bookings.filter(
@@ -76,59 +54,23 @@ export default function CabinetPage({ user }) {
     }
   };
 
-  if (loading) return <p>Загрузка…</p>;
+  if (loading) {
+    return <p className="loading-pulse">Загрузка…</p>;
+  }
 
   return (
-    <section>
+    <section className="page-enter">
       <h2>Личный кабинет</h2>
       <p className="mb-6">
         {user?.fullName} ({user?.login}) — история заявок и отзывы об услугах
       </p>
 
-      {error && <div className="alert-error">{error}</div>}
-      {success && <div className="alert-success">{success}</div>}
+      {error && <div className="alert-error animate-in">{error}</div>}
+      {success && <div className="alert-success animate-in">{success}</div>}
 
-      <div className="card mb-8 !p-0 overflow-hidden">
-        <h3 className="px-4 pt-4">Фотогалерея</h3>
-        <div className="slider">
-          <img
-            src={slides[slideIndex]}
-            alt={`Слайд ${slideIndex + 1}`}
-            className="slider-img"
-          />
-          <div className="slider-controls">
-            <button
-              type="button"
-              className="slider-btn"
-              onClick={() => setSlideIndex((prev) => (prev - 1 + slides.length) % slides.length)}
-              aria-label="Предыдущий слайд"
-            >
-              ‹
-            </button>
-            <button
-              type="button"
-              className="slider-btn"
-              onClick={() => setSlideIndex((prev) => (prev + 1) % slides.length)}
-              aria-label="Следующий слайд"
-            >
-              ›
-            </button>
-          </div>
-        </div>
-        <div className="slider-dots">
-          {slides.map((src, index) => (
-            <button
-              key={src}
-              type="button"
-              className={index === slideIndex ? "dot active" : "dot"}
-              onClick={() => setSlideIndex(index)}
-              aria-label={`Перейти к слайду ${index + 1}`}
-            />
-          ))}
-        </div>
-      </div>
+      <ImageSlider />
 
-      <div className="card mb-8">
+      <div className="card mb-8 animate-in">
         <h3>История заявок</h3>
         {bookings.length === 0 ? (
           <p className="text-muted">Заявок пока нет. Оформите бронирование на отдельной странице.</p>
@@ -138,8 +80,12 @@ export default function CabinetPage({ user }) {
               <article key={b._id} className="booking-item">
                 <p className="booking-title">{b.venue?.name}</p>
                 <p className="text-muted capitalize">{b.venue?.type}</p>
-                <p className="mb-1"><strong>Дата:</strong> {formatDate(b.banquetDate)}</p>
-                <p className="mb-1"><strong>Оплата:</strong> {b.paymentMethod}</p>
+                <p className="mb-1">
+                  <strong>Дата:</strong> {formatDateTime(b.banquetDate)}
+                </p>
+                <p className="mb-1">
+                  <strong>Оплата:</strong> {b.paymentMethod}
+                </p>
                 <p className={statusClass(b.status)}>{b.status}</p>
               </article>
             ))}
@@ -147,7 +93,7 @@ export default function CabinetPage({ user }) {
         )}
       </div>
 
-      <div className="card">
+      <div className="card animate-in">
         <h3>Отзывы</h3>
         {reviews.length > 0 && (
           <ul className="mb-6 space-y-3">
@@ -177,7 +123,7 @@ export default function CabinetPage({ user }) {
                 <option value="">Выберите заявку</option>
                 {canReview.map((b) => (
                   <option key={b._id} value={b._id}>
-                    {b.venue?.name} — {formatDate(b.banquetDate)}
+                    {b.venue?.name} — {formatDateTime(b.banquetDate)}
                   </option>
                 ))}
               </select>

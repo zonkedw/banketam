@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { fetchAllBookings, updateBookingStatus } from "../api/bookingsApi";
+import { formatDateTime } from "../utils/formatDate";
 
 const STATUSES = ["Новая", "Банкет назначен", "Банкет завершен"];
 
-function formatDate(value) {
-  return new Date(value).toLocaleString("ru-RU");
+function statusClass(status) {
+  if (status === "Новая") return "status-new";
+  if (status === "Банкет назначен") return "status-assigned";
+  return "status-done";
 }
 
 export default function AdminPanelPage() {
@@ -88,10 +91,10 @@ export default function AdminPanelPage() {
     setPage(1);
   }, [statusFilter, search, sortKey]);
 
-  if (loading) return <p>Загрузка заявок…</p>;
+  if (loading) return <p className="loading-pulse">Загрузка заявок…</p>;
 
   return (
-    <section>
+    <section className="page-enter admin-page">
       <h2>Панель администратора</h2>
       <p className="mb-4 text-muted">Фильтры, сортировка, постраничная навигация и изменение статуса</p>
 
@@ -139,58 +142,52 @@ export default function AdminPanelPage() {
         </div>
       </div>
 
-      <div className="card overflow-x-auto">
+      <div className="card animate-in">
+        <h3 className="!text-base">Заявки</h3>
         {pageItems.length === 0 ? (
           <p className="text-muted">Заявок пока нет</p>
         ) : (
-          <table className="w-full min-w-[720px] border-collapse text-left text-sm">
-            <thead>
-              <tr className="border-b-2 border-[#FFDAB9]">
-                <th className="py-2 pr-2">Клиент</th>
-                <th className="py-2 pr-2">Помещение</th>
-                <th className="py-2 pr-2">Дата</th>
-                <th className="py-2 pr-2">Оплата</th>
-                <th className="py-2">Статус</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pageItems.map((b) => (
-                <tr key={b._id} className="border-b border-[#FFDAB9]">
-                  <td className="py-3 pr-2">
-                    <strong>{b.user?.fullName}</strong>
-                    <span className="text-muted block text-xs">
-                      {b.user?.login} · {b.user?.phone}
-                    </span>
-                  </td>
-                  <td className="py-3 pr-2">
-                    {b.venue?.name}
-                    <span className="text-muted block text-xs">{b.venue?.type}</span>
-                  </td>
-                  <td className="py-3 pr-2">{formatDate(b.banquetDate)}</td>
-                  <td className="py-3 pr-2">{b.paymentMethod}</td>
-                  <td className="py-3">
-                    <select
-                      className="input-field !w-auto min-w-[180px]"
-                      value={b.status}
-                      onChange={(e) =>
-                        setPendingStatus({
-                          id: b._id,
-                          client: b.user?.fullName,
-                          status: e.target.value,
-                        })
-                      }
-                    >
-                      {STATUSES.map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="space-y-3">
+            {pageItems.map((b) => (
+              <article key={b._id} className="booking-item">
+                <p className="booking-title">{b.user?.fullName}</p>
+                <p className="text-muted mb-2 text-xs">
+                  {b.user?.login} · {b.user?.phone}
+                </p>
+                <p className="mb-1">
+                  <strong>Помещение:</strong> {b.venue?.name}
+                </p>
+                <p className="text-muted mb-2 capitalize text-xs">{b.venue?.type}</p>
+                <p className="mb-1">
+                  <strong>Дата:</strong> {formatDateTime(b.banquetDate)}
+                </p>
+                <p className="mb-2">
+                  <strong>Оплата:</strong> {b.paymentMethod}
+                </p>
+                <p className={`mb-2 ${statusClass(b.status)}`}>{b.status}</p>
+                <div className="form-group mb-0">
+                  <label className="label-field">Изменить статус</label>
+                  <select
+                    className="input-field"
+                    value={b.status}
+                    onChange={(e) =>
+                      setPendingStatus({
+                        id: b._id,
+                        client: b.user?.fullName,
+                        status: e.target.value,
+                      })
+                    }
+                  >
+                    {STATUSES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </article>
+            ))}
+          </div>
         )}
       </div>
 

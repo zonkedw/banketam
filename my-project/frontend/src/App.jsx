@@ -64,7 +64,7 @@ export default function App() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#FFFDD0]">
-        Загрузка…
+        <p className="loading-pulse">Загрузка…</p>
       </div>
     );
   }

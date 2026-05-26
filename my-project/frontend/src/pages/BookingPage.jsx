@@ -56,7 +56,7 @@ export default function BookingPage() {
   };
 
   return (
-    <section>
+    <section className="page-enter">
       <h2>Оформление заявки</h2>
       <p className="mb-6 text-muted">
         Выберите помещение, дату начала банкета и способ оплаты. Статус по умолчанию — «Новая».

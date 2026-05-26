@@ -17,22 +17,41 @@
   --font-oswald: "Oswald", sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh;
   font-family: var(--font-oswald);
   font-size: 16px;
   color: #000;
   background: var(--color-cream);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .app-shell {
   width: min(1100px, calc(100vw - 24px));
   min-height: 100vh;
+  min-height: 100dvh;
   margin: 0 auto;
   background: #fff;
   border: 2px solid var(--color-peach);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.page-main {
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.5rem;
 }
 
 h1 {
@@ -76,19 +95,29 @@ h3 {
 .btn-primary {
   background: var(--color-crimson);
   color: #fff;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .btn-primary:hover {
   background: #b01030;
 }
 
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
 .btn-secondary {
   background: var(--color-gold);
   color: #000;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .btn-secondary:hover {
   background: #c4941c;
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
 }
 
 .card {
@@ -96,6 +125,11 @@ h3 {
   border: 2px solid var(--color-peach);
   padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(218, 165, 32, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 6px 16px rgba(218, 165, 32, 0.22);
 }
 
 .input-field {
@@ -196,6 +230,68 @@ h3 {
   display: block;
 }
 
+.slider-fade {
+  animation: fadeIn 0.45s ease;
+}
+
+.venue-img {
+  height: 11rem;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.link-phone {
+  color: var(--color-forest);
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.animate-in {
+  animation: fadeInUp 0.4s ease both;
+}
+
+.page-enter {
+  animation: fadeIn 0.35s ease;
+}
+
+.loading-pulse {
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.alert-toast {
+  animation: fadeInUp 0.3s ease;
+}
+
 .slider-controls {
   position: absolute;
   inset: 0;
@@ -238,6 +334,26 @@ h3 {
   border: 1px solid var(--color-peach);
   padding: 0.8rem;
   background: #fffef6;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.booking-item .input-field,
+.booking-item select {
+  max-width: 100%;
+}
+
+.admin-page .card {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-page .input-field,
+.admin-page select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .booking-title {
@@ -249,8 +365,9 @@ h3 {
 
 .pagination {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 10px;
   margin-top: 14px;
 }
@@ -261,8 +378,12 @@ h3 {
   background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 12px;
+  padding-top: max(12px, env(safe-area-inset-top));
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   z-index: 60;
 }
 
@@ -271,6 +392,7 @@ h3 {
   background: #fff;
   border: 2px solid var(--color-gold);
   padding: 1rem;
+  animation: fadeInUp 0.25s ease;
 }
 
 .modal-actions {
@@ -307,8 +429,29 @@ h3 {
   }
 
   .app-shell {
-    width: min(390px, calc(100vw - 12px));
-    min-height: 844px;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100dvh;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .page-shell-wrap {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .page-main {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .pagination {
+    justify-content: space-between;
+  }
+
+  .modal-backdrop {
+    align-items: center;
   }
 
   .mobile-frame {

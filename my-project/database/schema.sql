@@ -26,7 +26,9 @@ CREATE TABLE IF NOT EXISTS bookings (
   venue_id       INTEGER      NOT NULL REFERENCES venues(id) ON DELETE RESTRICT,
   banquet_date   TIMESTAMPTZ  NOT NULL,
   payment_method VARCHAR(64)  NOT NULL CHECK (payment_method IN (
-    'Наличные', 'Банковская карта', 'Безналичный расчёт'
+    'Предоплата по QR-коду',
+    'Оплата картой МИР',
+    'Постоплата в офисе организации'
   )),
   status         VARCHAR(64)  NOT NULL DEFAULT 'Новая' CHECK (status IN (
     'Новая', 'Банкет назначен', 'Банкет завершен'
@@ -47,3 +49,12 @@ CREATE INDEX IF NOT EXISTS idx_bookings_user ON bookings(user_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_venue ON bookings(venue_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_status ON bookings(status);
 CREATE INDEX IF NOT EXISTS idx_reviews_user ON reviews(user_id);
+
+CREATE TABLE IF NOT EXISTS organization (
+  id         INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+  address    TEXT         NOT NULL,
+  hotline    VARCHAR(64)  NOT NULL,
+  updated_at TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_bookings_banquet_date ON bookings(banquet_date);

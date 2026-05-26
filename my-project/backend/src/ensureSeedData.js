@@ -1,4 +1,5 @@
 const { getPool } = require("./config/db");
+const { ORGANIZATION } = require("./constants");
 
 const DEFAULT_VENUES = [
   {
@@ -31,18 +32,41 @@ const DEFAULT_VENUES = [
   },
 ];
 
-async function ensureSeedData() {
-  const pool = getPool();
+async function ensureOrganization(pool) {
+  const { rows } = await pool.query("SELECT id FROM organization WHERE id = 1");
+  if (rows.length) return;
+
+  await pool.query(
+    `INSERT INTO organization (id, address, hotline) VALUES (1, $1, $2)`,
+    [ORGANIZATION.address, ORGANIZATION.hotline]
+  );
+}
+
+async function ensureVenues(pool) {
   const { rows } = await pool.query("SELECT COUNT(*)::int AS count FROM venues");
-  if (rows[0].count > 0) return;
+  if (rows[0].count === 0) {
+    for (const v of DEFAULT_VENUES) {
+      await pool.query(
+        `INSERT INTO venues (name, type, description, capacity, image_url)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [v.name, v.type, v.description, v.capacity, v.image_url]
+      );
+    }
+    return;
+  }
 
   for (const v of DEFAULT_VENUES) {
     await pool.query(
-      `INSERT INTO venues (name, type, description, capacity, image_url)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [v.name, v.type, v.description, v.capacity, v.image_url]
+      `UPDATE venues SET image_url = $1 WHERE type = $2`,
+      [v.image_url, v.type]
     );
   }
+}
+
+async function ensureSeedData() {
+  const pool = getPool();
+  await ensureOrganization(pool);
+  await ensureVenues(pool);
 }
 
 module.exports = ensureSeedData;

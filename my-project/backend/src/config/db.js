@@ -19,11 +19,16 @@ async function connectDatabase() {
   console.log("PostgreSQL подключена (Банкетам.Нет)");
 }
 
-async function initSchema() {
-  const schemaPath = path.join(__dirname, "../../../database/schema.sql");
-  if (!fs.existsSync(schemaPath)) return;
-  const sql = fs.readFileSync(schemaPath, "utf8");
+async function runSqlFile(fileName) {
+  const filePath = path.join(__dirname, "../../../database", fileName);
+  if (!fs.existsSync(filePath)) return;
+  const sql = fs.readFileSync(filePath, "utf8");
   await getPool().query(sql);
+}
+
+async function initSchema() {
+  await runSqlFile("schema.sql");
+  await runSqlFile("migrate_module3.sql");
 }
 
 module.exports = { getPool, connectDatabase, initSchema };

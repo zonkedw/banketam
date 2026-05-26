@@ -19,12 +19,19 @@ function formatDate(value) {
 }
 
 export default function CabinetPage({ user }) {
+  const slides = [
+    "/module2/slide-1.jpeg",
+    "/module2/slide-2.jpeg",
+    "/module2/slide-3.jpeg",
+    "/module2/slide-4.jpeg",
+  ];
   const [bookings, setBookings] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [reviewForm, setReviewForm] = useState({ bookingId: "", text: "", rating: 5 });
   const [loading, setLoading] = useState(true);
+  const [slideIndex, setSlideIndex] = useState(0);
 
   const load = async () => {
     setLoading(true);
@@ -42,6 +49,13 @@ export default function CabinetPage({ user }) {
   useEffect(() => {
     load();
   }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % slides.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
   const reviewedIds = new Set(reviews.map((r) => String(r.booking?._id || r.booking)));
   const canReview = bookings.filter(
@@ -74,35 +88,61 @@ export default function CabinetPage({ user }) {
       {error && <div className="alert-error">{error}</div>}
       {success && <div className="alert-success">{success}</div>}
 
+      <div className="card mb-8 !p-0 overflow-hidden">
+        <h3 className="px-4 pt-4">Фотогалерея</h3>
+        <div className="slider">
+          <img
+            src={slides[slideIndex]}
+            alt={`Слайд ${slideIndex + 1}`}
+            className="slider-img"
+          />
+          <div className="slider-controls">
+            <button
+              type="button"
+              className="slider-btn"
+              onClick={() => setSlideIndex((prev) => (prev - 1 + slides.length) % slides.length)}
+              aria-label="Предыдущий слайд"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className="slider-btn"
+              onClick={() => setSlideIndex((prev) => (prev + 1) % slides.length)}
+              aria-label="Следующий слайд"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+        <div className="slider-dots">
+          {slides.map((src, index) => (
+            <button
+              key={src}
+              type="button"
+              className={index === slideIndex ? "dot active" : "dot"}
+              onClick={() => setSlideIndex(index)}
+              aria-label={`Перейти к слайду ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+
       <div className="card mb-8">
         <h3>История заявок</h3>
         {bookings.length === 0 ? (
           <p className="text-muted">Заявок пока нет. Оформите бронирование на отдельной странице.</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left text-sm">
-              <thead>
-                <tr className="border-b-2 border-[#FFDAB9]">
-                  <th className="py-2 pr-2">Помещение</th>
-                  <th className="py-2 pr-2">Дата банкета</th>
-                  <th className="py-2 pr-2">Оплата</th>
-                  <th className="py-2">Статус</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bookings.map((b) => (
-                  <tr key={b._id} className="border-b border-[#FFDAB9]">
-                    <td className="py-2 pr-2">
-                      {b.venue?.name}
-                      <span className="text-muted block text-xs">{b.venue?.type}</span>
-                    </td>
-                    <td className="py-2 pr-2">{formatDate(b.banquetDate)}</td>
-                    <td className="py-2 pr-2">{b.paymentMethod}</td>
-                    <td className={`py-2 ${statusClass(b.status)}`}>{b.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-3">
+            {bookings.map((b) => (
+              <article key={b._id} className="booking-item">
+                <p className="booking-title">{b.venue?.name}</p>
+                <p className="text-muted capitalize">{b.venue?.type}</p>
+                <p className="mb-1"><strong>Дата:</strong> {formatDate(b.banquetDate)}</p>
+                <p className="mb-1"><strong>Оплата:</strong> {b.paymentMethod}</p>
+                <p className={statusClass(b.status)}>{b.status}</p>
+              </article>
+            ))}
           </div>
         )}
       </div>

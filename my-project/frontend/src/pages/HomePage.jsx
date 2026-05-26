@@ -14,7 +14,7 @@ export default function HomePage({ user }) {
   return (
     <section>
       <h2>Добро пожаловать</h2>
-      <p className="mb-6 max-w-2xl">
+      <p className="mb-6">
         Портал «Банкетам.Нет» — бронирование помещений для банкетов: зал, ресторан,
         летняя веранда, закрытая веранда. Укажите дату и способ оплаты — заявка
         уйдёт администратору на согласование.
@@ -37,7 +37,7 @@ export default function HomePage({ user }) {
           )}
         </div>
         <div className="card flex items-center justify-center">
-          <img src="/logo.png" alt="" className="max-h-32 opacity-90" />
+          <img src="/module2/social.png" alt="Социальные сети" className="max-h-28 opacity-90" />
         </div>
       </div>
 

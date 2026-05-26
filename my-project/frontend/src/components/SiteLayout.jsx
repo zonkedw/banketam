@@ -2,19 +2,20 @@ import { Link, Outlet } from "react-router-dom";
 
 export default function SiteLayout({ user, onLogout, isAdmin }) {
   return (
-    <div className="min-h-screen">
-      <header className="border-b-4 border-[#DAA520] bg-[#FFDAB9] px-4 py-3">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
+    <div className="min-h-screen bg-[#fff6df] py-3">
+      <div className="app-shell">
+        <header className="border-b-4 border-[#DAA520] bg-[#FFDAB9] px-3 py-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
           <Link to="/" className="flex items-center gap-3 no-underline">
             <img src="/logo.png" alt="Банкетам.Нет" className="h-12 w-12 object-contain" />
             <div>
-              <h1 className="!mb-0 text-2xl md:text-4xl">Банкетам.Нет</h1>
-              <p className="text-muted !text-xs md:!text-sm">
+              <h1 className="!mb-0 text-2xl">Банкетам.Нет</h1>
+              <p className="text-muted !text-xs">
                 Бронирование помещений для банкетов
               </p>
             </div>
           </Link>
-          <nav className="flex flex-wrap items-center gap-2 text-sm md:text-base">
+          <nav className="flex flex-wrap items-center gap-2 text-sm">
             {!isAdmin && user && (
               <>
                 <Link to="/cabinet" className="btn-secondary !py-2 !text-sm">
@@ -48,16 +49,17 @@ export default function SiteLayout({ user, onLogout, isAdmin }) {
               Админ
             </Link>
           </nav>
-        </div>
-      </header>
-      <main className="mx-auto max-w-5xl px-4 py-8">
-        <Outlet />
-      </main>
-      <footer className="border-t-2 border-[#DAA520] bg-[#FFDAB9] px-4 py-4 text-center">
-        <p className="text-muted">
-          зал · ресторан · летняя веранда · закрытая веранда — ДЭ М1, вариант №4
-        </p>
-      </footer>
+          </div>
+        </header>
+        <main className="px-3 py-5">
+          <Outlet />
+        </main>
+        <footer className="border-t-2 border-[#DAA520] bg-[#FFDAB9] px-3 py-4 text-center">
+          <p className="text-muted">
+            зал · ресторан · летняя веранда · закрытая веранда — ДЭ М2, вариант №4
+          </p>
+        </footer>
+      </div>
     </div>
   );
 }

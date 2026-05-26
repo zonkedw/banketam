@@ -1,4 +1,12 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
+
+@font-face {
+  font-family: "Oswald";
+  src: url("/fonts/oswald-temp/Oswald/Oswald-VariableFont_wght.ttf")
+    format("truetype");
+  font-weight: 200 700;
+  font-style: normal;
+}
 
 @theme {
   --color-gold: #daa520;
@@ -16,6 +24,15 @@ body {
   font-size: 16px;
   color: #000;
   background: var(--color-cream);
+}
+
+.app-shell {
+  width: min(1100px, calc(100vw - 24px));
+  min-height: 100vh;
+  margin: 0 auto;
+  background: #fff;
+  border: 2px solid var(--color-peach);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -44,11 +61,10 @@ h3 {
   color: var(--color-forest);
 }
 
-.btn-primary {
+.btn-primary,
+.btn-secondary {
   display: inline-block;
   padding: 0.6rem 1.25rem;
-  background: var(--color-crimson);
-  color: #fff;
   border: none;
   font-family: inherit;
   font-size: 16px;
@@ -57,20 +73,18 @@ h3 {
   text-align: center;
 }
 
+.btn-primary {
+  background: var(--color-crimson);
+  color: #fff;
+}
+
 .btn-primary:hover {
   background: #b01030;
 }
 
 .btn-secondary {
-  display: inline-block;
-  padding: 0.6rem 1.25rem;
   background: var(--color-gold);
   color: #000;
-  border: none;
-  font-family: inherit;
-  font-size: 16px;
-  cursor: pointer;
-  text-decoration: none;
 }
 
 .btn-secondary:hover {
@@ -110,22 +124,39 @@ h3 {
   margin-bottom: 1rem;
 }
 
+.field-error {
+  margin-top: 0.2rem;
+  color: var(--color-crimson);
+  font-size: 12px;
+}
+
+.alert-error,
+.alert-success,
+.alert-toast {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 14px;
+}
+
 .alert-error {
   background: #ffe4e8;
   border: 1px solid var(--color-crimson);
   color: var(--color-crimson);
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-  font-size: 14px;
 }
 
 .alert-success {
   background: #e8f5e9;
   border: 1px solid var(--color-forest);
   color: var(--color-forest);
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-  font-size: 14px;
+}
+
+.alert-toast {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 50;
+  background: #fff;
+  border: 2px solid var(--color-gold);
 }
 
 .status-new {
@@ -141,4 +172,147 @@ h3 {
 .status-done {
   color: var(--color-forest);
   font-weight: 600;
+}
+
+.mobile-frame {
+  width: 100%;
+  max-width: 390px;
+  margin: 0 auto;
+}
+
+.slider {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--color-peach);
+  background: #fff7ea;
+  aspect-ratio: 16 / 9;
+}
+
+.slider-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+.slider-controls {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.slider-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  cursor: pointer;
+}
+
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 0 14px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border: none;
+  border-radius: 999px;
+  background: #d8c8aa;
+  cursor: pointer;
+}
+
+.dot.active {
+  background: var(--color-crimson);
+}
+
+.booking-item {
+  border: 1px solid var(--color-peach);
+  padding: 0.8rem;
+  background: #fffef6;
+}
+
+.booking-title {
+  margin: 0 0 0.2rem;
+  font-size: 18px;
+  color: var(--color-gold);
+  font-weight: 600;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  z-index: 60;
+}
+
+.modal-card {
+  width: min(360px, 100%);
+  background: #fff;
+  border: 2px solid var(--color-gold);
+  padding: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 30px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    font-size: 15px;
+  }
+
+  .card .btn-primary,
+  .card .btn-secondary {
+    width: 100%;
+  }
+
+  .app-shell {
+    width: min(390px, calc(100vw - 12px));
+    min-height: 844px;
+  }
+
+  .mobile-frame {
+    max-width: 100%;
+    min-height: auto;
+  }
 }
